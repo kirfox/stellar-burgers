@@ -9,9 +9,10 @@ export const Feed: FC = () => {
   /** TODO: взять переменную из стора */
   const orders: TOrder[] = useSelector(selectOrders);
   const dispatch = useDispatch();
+
   if (!orders.length) {
     return <Preloader />;
   }
 
-  return <FeedUI orders={orders} handleGetFeeds={() => {dispatch(fetchOrders())}} />;
+  return <FeedUI orders={orders} handleGetFeeds={() => dispatch(fetchOrders())} />;
 };

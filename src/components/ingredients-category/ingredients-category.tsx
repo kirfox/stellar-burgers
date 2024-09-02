@@ -3,7 +3,7 @@ import { TIngredientsCategoryProps } from './type';
 import { TIngredient } from '@utils-types';
 import { IngredientsCategoryUI } from '../ui/ingredients-category';
 import { useSelector } from '../../services/store';
-import { selectConstructorItems } from '../../slices/constructorSlice';
+import { selectBun, selectConstructorItems } from '../../slices/constructorSlice';
 
 export const IngredientsCategory = forwardRef<
   HTMLUListElement,
@@ -11,26 +11,18 @@ export const IngredientsCategory = forwardRef<
 >(({ title, titleRef, ingredients }, ref) => {
   /** TODO: взять переменную из стора */
 
-  const a = useSelector(selectConstructorItems);
-  console.log(a);
-
-  const burgerConstructor = {
-    bun: {
-      _id: ''
-    },
-    ingredients: a.ingredients
-  };
+  const items = useSelector(selectConstructorItems);
+  const bun = useSelector(selectBun)
 
   const ingredientsCounters = useMemo(() => {
-    const { bun, ingredients } = burgerConstructor;
-    const counters: { [key: string]: number } = {};
-    ingredients.forEach((ingredient: TIngredient) => {
+    const counters: { [key: string ]: number } = {};
+    items.ingredients.forEach((ingredient: TIngredient) => {
       if (!counters[ingredient._id]) counters[ingredient._id] = 0;
       counters[ingredient._id]++;
     });
     if (bun) counters[bun._id] = 2;
     return counters;
-  }, [burgerConstructor]);
+  }, [items, bun]);
 
   return (
     <IngredientsCategoryUI

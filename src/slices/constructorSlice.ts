@@ -58,7 +58,8 @@ const constructorSlice = createSlice({
   selectors: {
     selectConstructorItems: (state) => state,
     selectOrderRequest: (state) => state.orderRequest,
-    selectOrderModalData: (state) => state.orderModalData
+    selectOrderModalData: (state) => state.orderModalData,
+    selectBun: (state) => state.bun
   },
   extraReducers: (buider) => {
     buider
@@ -76,6 +77,7 @@ export const { addIngredients, deleteIngredients, moveIngredient, resetOrder } =
 export const {
   selectConstructorItems,
   selectOrderRequest,
-  selectOrderModalData
+  selectOrderModalData,
+  selectBun
 } = constructorSlice.selectors;
 export default constructorSlice.reducer;

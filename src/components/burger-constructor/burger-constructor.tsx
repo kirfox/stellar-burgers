@@ -23,7 +23,13 @@ export const BurgerConstructor: FC = () => {
   const dispatch = useDispatch();
 
   const onOrderClick = () => {
-    if (!constructorItems.bun || orderRequest || !user) return;
+    if(!constructorItems.bun || orderRequest) return;
+
+    if(!user) {
+      navigate('/login');
+      return;
+    }
+
     const order = constructorItems.ingredients.map(
       (ingredient) => ingredient._id
     );
