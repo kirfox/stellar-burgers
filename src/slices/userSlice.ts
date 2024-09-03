@@ -102,7 +102,7 @@ export const userSlice = createSlice({
         localStorage.setItem('refreshToken', action.payload.refreshToken);
       })
 
-      .addCase(loginUser.pending, (state) => {
+      .addCase(loginUser.pending, (state) => { 
         state.isAuthChecked = true;
         state.loginUserError = false;
       })
@@ -113,13 +113,13 @@ export const userSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         state.user = action.payload.user;
         state.loginUserError = null;
-        state.isAuthChecked = false;
+        state.isAuthChecked = true;
         setCookie('accessToken', action.payload.accessToken);
         localStorage.setItem('refreshToken', action.payload.refreshToken);
       })
 
       .addCase(updateUser.pending, (state) => {
-        // state.isAuthChecked = true;
+        state.isAuthChecked = true;
         state.loginUserError = false;
       })
       .addCase(updateUser.rejected, (state, action) => {
@@ -155,7 +155,7 @@ export const userSlice = createSlice({
       })
 
       .addCase(getUser.pending, (state) => {
-        // state.isAuthChecked = true;
+        state.isAuthChecked = true;
         state.loginUserError = false;
         // if(!state.user) refreshToken();
       })
@@ -165,7 +165,7 @@ export const userSlice = createSlice({
       .addCase(getUser.fulfilled, (state, action) => {
         state.user = action.payload.user;
         state.loginUserError = null;
-        // state.isAuthChecked = false;
+        state.isAuthChecked = false;
       });
   }
 });

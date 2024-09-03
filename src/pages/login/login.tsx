@@ -14,7 +14,7 @@ export const Login: FC = () => {
     e.preventDefault();
     dispatch(loginUser({ email, password }))
       .then(() => {
-        navigate('/profile');
+        navigate('/');
       })
       .catch(({ message }) => console.log(message));
   };

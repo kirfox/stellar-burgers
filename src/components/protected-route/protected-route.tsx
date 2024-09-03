@@ -15,10 +15,11 @@ export const ProtectedRoute = ({
 }: ProtectedRouteProps) => {
   const isAuthChecked = useSelector(selectIsAuthChecked); // isAuthCheckedSelector — селектор получения состояния загрузки пользователя
   const user = useSelector(selectUser); // userDataSelector — селектор получения пользователя из store
-
-  // if (!isAuthChecked) { // пока идёт чекаут пользователя, показываем прелоадер
-  //    return <Preloader />;
-  // }
+  console.log(isAuthChecked);
+  
+  if (!isAuthChecked) { // пока идёт чекаут пользователя, показываем прелоадер
+     return <Preloader />;
+  }
   console.log(user);
 
   if (!onlyUnAuth && !user) {
