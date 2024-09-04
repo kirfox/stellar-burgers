@@ -23,7 +23,7 @@ import { getUser } from '../../slices/userSlice';
 
 const App = () => {
   const navigate = useNavigate();
-  const onClose = () => navigate(-1);
+  const onClose = () => navigate(backgroundLocation);
   const location = useLocation();
 
   const backgroundLocation = location.state?.background;
@@ -31,7 +31,6 @@ const App = () => {
 
   useEffect(() => {
     dispatch(fetchIngridients());
-    dispatch(fetchOrders());
     dispatch(getUser());
   }, [dispatch]);
 

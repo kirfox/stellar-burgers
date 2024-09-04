@@ -10,6 +10,10 @@ export const Feed: FC = () => {
   const orders: TOrder[] = useSelector(selectOrders);
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    dispatch(fetchOrders());
+  }, [dispatch]);
+
   if (!orders.length) {
     return <Preloader />;
   }

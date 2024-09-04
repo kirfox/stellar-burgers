@@ -1,8 +1,6 @@
-import { getOrdersApi, orderBurgerApi } from '@api';
-import { createAsyncThunk, createSlice, current } from '@reduxjs/toolkit';
+import { orderBurgerApi } from '@api';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { TConstructorIngredient, TOrder } from '@utils-types';
-import { randomInt } from 'crypto';
-import { useSelector } from '../services/store';
 
 interface TOrderState {
   ingredients: TConstructorIngredient[];
@@ -18,19 +16,24 @@ const initialState: TOrderState = {
   orderModalData: null
 };
 
-export const makeOrder = createAsyncThunk(
-  'order/makeOrder',
-  async (data: string[]) => await orderBurgerApi(data)
-);
+export const makeOrder = createAsyncThunk('order/makeOrder', orderBurgerApi);
 
 const constructorSlice = createSlice({
   name: 'builder',
   initialState,
   reducers: {
-    addIngredients: (state, action) => {
-      action.payload.type === 'bun'
-        ? (state.bun = { ...action.payload })
-        : state.ingredients.push({ ...action.payload, id: Math.random() });
+    addIngredients: {
+      reducer: (
+        state: TOrderState,
+        action: PayloadAction<TConstructorIngredient>
+      ) => {
+        action.payload.type === 'bun'
+          ? (state.bun = { ...action.payload })
+          : state.ingredients.push(action.payload);
+      },
+      prepare: (ingredient) => ({
+        payload: { ...ingredient, id: Math.random() }
+      })
     },
     deleteIngredients: (state, action) => {
       state.ingredients.splice(action.payload, 1);

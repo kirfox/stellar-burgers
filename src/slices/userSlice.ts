@@ -1,26 +1,19 @@
 import {
-  fetchWithRefresh,
-  forgotPasswordApi,
   getOrderByNumberApi,
   getOrdersApi,
   getUserApi,
   loginUserApi,
   logoutApi,
-  refreshToken,
   registerUserApi,
-  TLoginData,
-  TRegisterData,
   updateUserApi
 } from '@api';
 import {
   createAsyncThunk,
   createSlice,
-  current,
   SerializedError
 } from '@reduxjs/toolkit';
 import { TOrder, TUser } from '@utils-types';
-import { deleteCookie, getCookie, setCookie } from '../utils/cookie';
-import { useNavigate } from 'react-router-dom';
+import { deleteCookie, setCookie } from '../utils/cookie';
 
 interface TUserState {
   isAuthChecked: boolean;
@@ -40,38 +33,14 @@ const initialState: TUserState = {
 
 export const registerUser = createAsyncThunk(
   'user/registerUser',
-  async (data: TRegisterData) => await registerUserApi(data)
+  registerUserApi
 );
-
-export const loginUser = createAsyncThunk(
-  'user/loginUser',
-  async (data: TLoginData) => await loginUserApi(data)
-);
-
-export const updateUser = createAsyncThunk(
-  'user/updateUser',
-  async (data: TRegisterData) => await updateUserApi(data)
-);
-
-export const logoutUser = createAsyncThunk(
-  'user/logoutUser',
-  async () => await logoutApi()
-);
-
-export const getOrders = createAsyncThunk(
-  'user/getOrders',
-  async () => await getOrdersApi()
-);
-
-export const getUser = createAsyncThunk(
-  'user/getUser',
-  async () => await getUserApi()
-);
-
-export const getOrder = createAsyncThunk(
-  'user/getOrder',
-  async (number: number) => await getOrderByNumberApi(number)
-);
+export const loginUser = createAsyncThunk('user/loginUser', loginUserApi);
+export const updateUser = createAsyncThunk('user/updateUser', updateUserApi);
+export const logoutUser = createAsyncThunk('user/logoutUser', logoutApi);
+export const getOrders = createAsyncThunk('user/getOrders', getOrdersApi);
+export const getUser = createAsyncThunk('user/getUser', getUserApi);
+export const getOrder = createAsyncThunk('user/getOrder', getOrderByNumberApi);
 
 export const userSlice = createSlice({
   name: 'user',
@@ -95,7 +64,6 @@ export const userSlice = createSlice({
       })
       .addCase(getUser.fulfilled, (state, action) => {
         state.user = action.payload.user;
-
         state.isAuthChecked = true;
       })
 
@@ -161,7 +129,6 @@ export const userSlice = createSlice({
       })
       .addCase(getOrders.fulfilled, (state, action) => {
         state.orders = action.payload;
-
         state.loginUserError = null;
       })
 
