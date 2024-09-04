@@ -1,6 +1,7 @@
 import {
   fetchWithRefresh,
   forgotPasswordApi,
+  getOrderByNumberApi,
   getOrdersApi,
   getUserApi,
   loginUserApi,
@@ -11,30 +12,31 @@ import {
   TRegisterData,
   updateUserApi
 } from '@api';
-import { createAsyncThunk, createSlice, current } from '@reduxjs/toolkit';
+import {
+  createAsyncThunk,
+  createSlice,
+  current,
+  SerializedError
+} from '@reduxjs/toolkit';
 import { TOrder, TUser } from '@utils-types';
 import { deleteCookie, getCookie, setCookie } from '../utils/cookie';
 import { useNavigate } from 'react-router-dom';
 
 interface TUserState {
-  isAuthChecked: boolean; // флаг для статуса проверки токена пользователя
-  isAuthenticated: boolean;
-  loginUserError: any | null;
-  loginUserRequest: boolean;
+  isAuthChecked: boolean;
+  loginUserError: SerializedError | null;
   user: TUser | null;
   orders: TOrder[];
+  order: TOrder | null;
 }
 
 const initialState: TUserState = {
-  isAuthChecked: false, // флаг для статуса проверки токена пользователя
-  isAuthenticated: false,
+  isAuthChecked: false,
   loginUserError: null,
-  loginUserRequest: false,
   user: null,
-  orders: []
+  orders: [],
+  order: null
 };
-//testfortest@yandex.ru
-//123456
 
 export const registerUser = createAsyncThunk(
   'user/registerUser',
@@ -66,48 +68,42 @@ export const getUser = createAsyncThunk(
   async () => await getUserApi()
 );
 
+export const getOrder = createAsyncThunk(
+  'user/getOrder',
+  async (number: number) => await getOrderByNumberApi(number)
+);
+
 export const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {},
   selectors: {
     selectUser: (state) => state.user,
-    // selectUserName: (state) => state.user.name,
-    // selectUserEmail: (state) => state.user.email,
     selectIsAuthChecked: (state) => state.isAuthChecked,
-    selectOrders: (state) => state.orders
+    selectOrders: (state) => state.orders,
+    selectOrder: (state) => state.order
   },
   extraReducers: (builder) => {
     builder
-      .addCase(registerUser.pending, (state) => {
-        // state.loginUserRequest = true;
-        state.loginUserError = null;
+
+      //getUser
+      .addCase(getUser.pending, (state) => {
         state.isAuthChecked = true;
       })
-      .addCase(registerUser.rejected, (state, action) => {
-        console.log(action.error.message);
-
-        // state.loginUserRequest = false;
-        state.loginUserError = action.error.message;
-        state.isAuthChecked = false;
+      .addCase(getUser.rejected, (state, action) => {
+        state.loginUserError = action.error;
       })
-      .addCase(registerUser.fulfilled, (state, action) => {
+      .addCase(getUser.fulfilled, (state, action) => {
         state.user = action.payload.user;
-        console.log(action.payload);
-        state.loginUserError = null;
-        // state.loginUserRequest = false;
-        // state.isAuthenticated = true;
-        state.isAuthChecked = false;
-        setCookie('accessToken', action.payload.accessToken);
-        localStorage.setItem('refreshToken', action.payload.refreshToken);
+
+        state.isAuthChecked = true;
       })
 
-      .addCase(loginUser.pending, (state) => { 
+      //login
+      .addCase(loginUser.pending, (state) => {
         state.isAuthChecked = true;
-        state.loginUserError = false;
       })
       .addCase(loginUser.rejected, (state, action) => {
-        console.log(action.error.message);
         state.loginUserError = action.error;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
@@ -118,58 +114,72 @@ export const userSlice = createSlice({
         localStorage.setItem('refreshToken', action.payload.refreshToken);
       })
 
+      //logout
+      .addCase(logoutUser.fulfilled, (state) => {
+        deleteCookie('accessToken');
+        localStorage.clear();
+        state.user = null;
+        state.loginUserError = null;
+        state.isAuthChecked = true;
+      })
+
+      //register
+      .addCase(registerUser.pending, (state) => {
+        state.loginUserError = null;
+        state.isAuthChecked = true;
+      })
+      .addCase(registerUser.rejected, (state, action) => {
+        state.loginUserError = action.error;
+      })
+      .addCase(registerUser.fulfilled, (state, action) => {
+        state.user = action.payload.user;
+        state.loginUserError = null;
+        state.isAuthChecked = true;
+        setCookie('accessToken', action.payload.accessToken);
+        localStorage.setItem('refreshToken', action.payload.refreshToken);
+      })
+
+      //update
       .addCase(updateUser.pending, (state) => {
         state.isAuthChecked = true;
-        state.loginUserError = false;
       })
       .addCase(updateUser.rejected, (state, action) => {
-        console.log(action.error.message);
         state.loginUserError = action.error;
       })
       .addCase(updateUser.fulfilled, (state, action) => {
         state.user = action.payload.user;
         state.loginUserError = null;
-        // state.isAuthChecked = false;
       })
 
-      .addCase(logoutUser.fulfilled, (state) => {
-        deleteCookie('accessToken');
-        state.user = null;
-        state.loginUserError = null;
-        state.isAuthChecked = false;
-      })
-
+      //getOrders
       .addCase(getOrders.pending, (state) => {
-        // state.isAuthChecked = true;
-        state.loginUserError = false;
+        state.isAuthChecked = true;
+        state.loginUserError = null;
       })
       .addCase(getOrders.rejected, (state, action) => {
         state.loginUserError = action.error;
       })
       .addCase(getOrders.fulfilled, (state, action) => {
         state.orders = action.payload;
-        console.log(state.orders);
 
         state.loginUserError = null;
-        // state.isAuthChecked = false;
       })
 
-      .addCase(getUser.pending, (state) => {
+      //getOrder
+      .addCase(getOrder.pending, (state) => {
         state.isAuthChecked = true;
-        state.loginUserError = false;
-        // if(!state.user) refreshToken();
+        state.loginUserError = null;
       })
-      .addCase(getUser.rejected, (state, action) => {
+      .addCase(getOrder.rejected, (state, action) => {
         state.loginUserError = action.error;
       })
-      .addCase(getUser.fulfilled, (state, action) => {
-        state.user = action.payload.user;
+      .addCase(getOrder.fulfilled, (state, action) => {
+        state.order = action.payload.orders[0];
         state.loginUserError = null;
-        state.isAuthChecked = false;
       });
   }
 });
 
-export const { selectUser, selectIsAuthChecked, selectOrders } =
+export const { selectUser, selectIsAuthChecked, selectOrders, selectOrder } =
   userSlice.selectors;
 export default userSlice.reducer;

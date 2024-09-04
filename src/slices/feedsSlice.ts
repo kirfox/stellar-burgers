@@ -40,20 +40,11 @@ const feedsSlice = createSlice({
     selectFeed: (state) => state.feed
   },
   extraReducers: (builder) => {
-    builder
-      .addCase(fetchOrders.pending, (state) => {
-        // state.isLoading = true;
-      })
-      .addCase(fetchOrders.fulfilled, (state, action) => {
-        state.orders = action.payload.orders;
-        state.feed.total = action.payload.total;
-        state.feed.totalToday = action.payload.totalToday;
-
-        // state.isLoading = false;
-      })
-      .addCase(fetchOrders.rejected, (state) => {
-        // state.isLoading = false;
-      });
+    builder.addCase(fetchOrders.fulfilled, (state, action) => {
+      state.orders = action.payload.orders;
+      state.feed.total = action.payload.total;
+      state.feed.totalToday = action.payload.totalToday;
+    });
   }
 });
 

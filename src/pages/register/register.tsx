@@ -11,7 +11,6 @@ export const Register: FC = () => {
   const [password, setPassword] = useState('');
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
 
@@ -20,12 +19,8 @@ export const Register: FC = () => {
       name: userName,
       password: password
     };
-    
-    dispatch(registerUser(data))
-    .then(() => {
-      navigate('/');
-    })
-    .catch(({ message }) => console.log(message));
+
+    dispatch(registerUser(data));
   };
 
   return (

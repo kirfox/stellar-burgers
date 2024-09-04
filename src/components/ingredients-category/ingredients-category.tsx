@@ -3,7 +3,10 @@ import { TIngredientsCategoryProps } from './type';
 import { TIngredient } from '@utils-types';
 import { IngredientsCategoryUI } from '../ui/ingredients-category';
 import { useSelector } from '../../services/store';
-import { selectBun, selectConstructorItems } from '../../slices/constructorSlice';
+import {
+  selectBun,
+  selectConstructorItems
+} from '../../slices/constructorSlice';
 
 export const IngredientsCategory = forwardRef<
   HTMLUListElement,
@@ -12,10 +15,10 @@ export const IngredientsCategory = forwardRef<
   /** TODO: взять переменную из стора */
 
   const items = useSelector(selectConstructorItems);
-  const bun = useSelector(selectBun)
+  const bun = useSelector(selectBun);
 
   const ingredientsCounters = useMemo(() => {
-    const counters: { [key: string ]: number } = {};
+    const counters: { [key: string]: number } = {};
     items.ingredients.forEach((ingredient: TIngredient) => {
       if (!counters[ingredient._id]) counters[ingredient._id] = 0;
       counters[ingredient._id]++;

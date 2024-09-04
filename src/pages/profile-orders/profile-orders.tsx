@@ -7,7 +7,6 @@ import { getOrders, selectOrders } from '../../slices/userSlice';
 import { Preloader } from '@ui';
 
 export const ProfileOrders: FC = () => {
-  /** TODO: взять переменную из стора */
   const dispatch = useDispatch();
   const orders: TOrder[] = useSelector(selectOrders);
 

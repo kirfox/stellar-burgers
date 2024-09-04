@@ -39,10 +39,9 @@ const App = () => {
     <div className={styles.app}>
       <AppHeader />
       <Routes location={backgroundLocation || location}>
-        <Route path='/' element={<ConstructorPage />} />
+        <Route index path='/' element={<ConstructorPage />} />
         <Route path='/feed' element={<Feed />} />
-        
-        {/* <Route path='/login' element={<Login />} /> */}
+
         <Route
           path='/login'
           element={
@@ -52,7 +51,6 @@ const App = () => {
           }
         />
 
-        {/* <Route path='/register' element={<Register />} /> */}
         <Route
           path='/register'
           element={
@@ -62,7 +60,6 @@ const App = () => {
           }
         />
 
-        {/* <Route path='/forgot-password' element={<ForgotPassword />} /> */}
         <Route
           path='/forgot-password'
           element={
@@ -72,8 +69,7 @@ const App = () => {
           }
         />
 
-        {/* <Route path='/reset-password' element={<ResetPassword />} /> */}
-        <Route 
+        <Route
           path='/reset-password'
           element={
             <ProtectedRoute onlyUnAuth>
@@ -82,7 +78,6 @@ const App = () => {
           }
         />
 
-        {/* <Route path='/profile' element={<Profile />} /> */}
         <Route
           path='/profile'
           element={
@@ -92,7 +87,6 @@ const App = () => {
           }
         />
 
-        {/* <Route path='/profile/orders' element={<ProfileOrders />} /> */}
         <Route
           path='/profile/orders'
           element={
@@ -102,47 +96,44 @@ const App = () => {
           }
         />
 
-
         <Route path='*' element={<NotFound404 />} />
         <Route path='/ingredients/:id' element={<IngredientDetails />} />
         <Route path='/feed/:number' element={<OrderInfo />} />
       </Routes>
 
-      <Routes>
-        <Route
-          path='/feed/:number'
-          element={
-            <Modal title='Заказ' onClose={onClose}>
-              {' '}
-              <OrderInfo />
-            </Modal>
-          }
-        />
-        <Route
-          path='/ingredients/:id'
-          element={
-            <Modal title='Детали ингредиента' onClose={onClose}>
-              {' '}
-              <IngredientDetails />
-            </Modal>
-          }
-        />
-        <Route
-          path='/profile/orders/:number'
-          element={
-            <ProtectedRoute>
-              <Modal title='Информаци по заказу' onClose={onClose}>
+      {backgroundLocation && (
+        <Routes>
+          <Route
+            path='/feed/:number'
+            element={
+              <Modal title='Заказ' onClose={onClose}>
                 {' '}
                 <OrderInfo />
               </Modal>
-            </ProtectedRoute>
-            // <Modal title='OrdersInfo' onClose={onClose}>
-            //   {' '}
-            //   <OrderInfo />
-            // </Modal>
-          }
-        />
-      </Routes>
+            }
+          />
+          <Route
+            path='/ingredients/:id'
+            element={
+              <Modal title='Детали ингредиента' onClose={onClose}>
+                {' '}
+                <IngredientDetails />
+              </Modal>
+            }
+          />
+          <Route
+            path='/profile/orders/:number'
+            element={
+              <ProtectedRoute>
+                <Modal title='Информаци по заказу' onClose={onClose}>
+                  {' '}
+                  <OrderInfo />
+                </Modal>
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      )}
     </div>
   );
 };

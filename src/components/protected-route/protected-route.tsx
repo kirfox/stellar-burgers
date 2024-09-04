@@ -1,8 +1,9 @@
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useSelector } from '../../services/store';
 import { selectIsAuthChecked, selectUser } from '../../slices/userSlice';
 import { Preloader } from '@ui';
 import { Login } from '@pages';
+import { current } from '@reduxjs/toolkit';
 
 type ProtectedRouteProps = {
   onlyUnAuth?: boolean;
@@ -13,19 +14,21 @@ export const ProtectedRoute = ({
   onlyUnAuth,
   children
 }: ProtectedRouteProps) => {
-  const isAuthChecked = useSelector(selectIsAuthChecked); // isAuthCheckedSelector — селектор получения состояния загрузки пользователя
-  const user = useSelector(selectUser); // userDataSelector — селектор получения пользователя из store
-  console.log(isAuthChecked);
-  
-  if (!isAuthChecked) { // пока идёт чекаут пользователя, показываем прелоадер
-     return <Preloader />;
+  const isAuthChecked = useSelector(selectIsAuthChecked);
+  const user = useSelector(selectUser);
+  const location = useLocation();
+
+  if (!isAuthChecked) {
+    return <Preloader />;
   }
-  console.log(user);
 
   if (!onlyUnAuth && !user) {
-    // если пользователя в хранилище нет, то делаем редирект
-    console.log(111);
     return <Navigate replace to='/login' />;
+  }
+
+  if (onlyUnAuth && user) {
+    const from = location.state?.from || { pathname: '/' };
+    return <Navigate replace to={from} />;
   }
   return children;
 };
