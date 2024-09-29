@@ -5,8 +5,10 @@ import {
   loginUserApi,
   logoutApi,
   registerUserApi,
+  TLoginData,
+  TRegisterData,
   updateUserApi
-} from '@api';
+} from '../utils/burger-api';
 import {
   createAsyncThunk,
   createSlice,
@@ -23,7 +25,7 @@ interface TUserState {
   order: TOrder | null;
 }
 
-const initialState: TUserState = {
+export const initialState: TUserState = {
   isAuthChecked: false,
   loginUserError: null,
   user: null,
@@ -35,6 +37,7 @@ export const registerUser = createAsyncThunk(
   'user/registerUser',
   registerUserApi
 );
+
 export const loginUser = createAsyncThunk('user/loginUser', loginUserApi);
 export const updateUser = createAsyncThunk('user/updateUser', updateUserApi);
 export const logoutUser = createAsyncThunk('user/logoutUser', logoutApi);

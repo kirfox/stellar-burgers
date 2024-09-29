@@ -35,3 +35,21 @@
 //     }
 //   }
 // }
+
+/*
+const ingredients = require('cypress/ingredients.json');
+declare namespace Cypress {
+    interface Chainable<Subject> {
+      interceptIngredients(): Chainable<Subject>;
+    }
+  }
+  
+  Cypress.Commands.add('interceptIngredients', () => {
+    cy.intercept('GET', 'http://localhost:4000/api/ingredients', {
+      // Возвращаемые моковые данные
+      body: ingredients
+    });
+  });
+
+*/
+  
