@@ -1,4 +1,5 @@
-import { orderBurgerApi } from '@api';
+// import { orderBurgerApi } from '@api';
+import { orderBurgerApi } from '../utils/burger-api';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { TConstructorIngredient, TOrder } from '@utils-types';
 
@@ -9,7 +10,7 @@ interface TOrderState {
   orderModalData: TOrder | null;
 }
 
-const initialState: TOrderState = {
+export const initialState: TOrderState = {
   ingredients: [],
   bun: null,
   orderRequest: false,
@@ -72,6 +73,7 @@ const constructorSlice = createSlice({
       .addCase(makeOrder.fulfilled, (state, action) => {
         state.orderRequest = false;
         state.orderModalData = action.payload.order;
+        console.log(action.payload);
       });
   }
 });

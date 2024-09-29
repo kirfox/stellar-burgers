@@ -1,4 +1,5 @@
-import { getFeedsApi } from '@api';
+// import { getFeedsApi } from '@api';
+import { getFeedsApi } from '../utils/burger-api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { TIngredient, TOrder } from '@utils-types';
 
@@ -14,7 +15,7 @@ interface TFeedState {
   number: number;
 }
 
-const initialState: TFeedState = {
+export const initialState: TFeedState = {
   orders: [],
   ingredients: [],
   isLoading: true,
