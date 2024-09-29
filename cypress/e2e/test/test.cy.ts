@@ -5,10 +5,15 @@ beforeEach(function () {
     cy.intercept('GET', 'api/auth/user', { fixture: 'user.json' }).as('user');
     cy.setCookie('accessToken', 'accessToken');
     localStorage.setItem('refreshToken', 'refreshToken');
-    cy.visit('http://localhost:4000')
+    cy.visit('/')
     cy.get('h3').as('title');
     cy.get('div').as('container')
-  });
+});
+
+afterEach(function () {
+    cy.clearCookies()
+    cy.clearLocalStorage();
+});
 
   describe('добавление ингредиента из списка в конструктор', function () {
     it('Добавления ингридиента', function () {
